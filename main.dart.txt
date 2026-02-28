@@ -1,0 +1,993 @@
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
+void main() {
+  runApp(const SudhasMahilaLokhApp());
+}
+
+class SudhasMahilaLokhApp extends StatelessWidget {
+  const SudhasMahilaLokhApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Sudha's Mahila Lokh",
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        fontFamily: 'Roboto',
+      ),
+      home: const SplashScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+// Splash/Home Screen
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.orange.shade50,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          },
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: const Center(
+              child: Text(
+                'sudha',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Main Home Screen
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: const Text(
+          "Sudha's Mahila Lokh 👩‍🍳",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.orange.shade400,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header Container
+            Container(
+              width: screenWidth,
+              height: 400,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.yellow.shade400, Colors.orange.shade500],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'One Stop Ladies shopee',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'AP biggest Jewellery, Cosmetics, Fancy items, Hair style\'s, Retail shop',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    '30 years of Trust and 1Lack+Designs',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  const Divider(color: Colors.white, thickness: 2),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Address: NTR stadium complex, Shop No.11,\nLakshmipuram, AP.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Shop timings: 10 AM to 9 PM',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Phone: 0863 2222855 | 9441412413',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'WhatsApp: 9441412413 👍',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Category Buttons
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                alignment: WrapAlignment.center,
+                children: [
+                  _buildCategoryButton(context, 'Cosmetics'),
+                  _buildCategoryButton(context, 'Bangles'),
+                  _buildCategoryButton(context, 'Jewellery'),
+                  _buildCategoryButton(context, 'One gram gold'),
+                  _buildCategoryButton(context, 'Chains'),
+                  _buildCategoryButton(context, 'Ear rings'),
+                  _buildCategoryButton(context, 'Hair clips'),
+                  _buildCategoryButton(context, 'Brochures'),
+                  _buildCategoryButton(context, 'Saree pins'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange.shade700,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 1) {
+            // Navigate to categories screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CategoriesListScreen()),
+            );
+          } else if (index == 2) {
+            // Navigate to favorites
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+            );
+          } else if (index == 3) {
+            // Navigate to settings
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Category',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: '❤️',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(BuildContext context, String category) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryScreen(categoryName: category),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.orange.shade400,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Text(
+        category,
+        style: const TextStyle(fontSize: 16),
+      ),
+    );
+  }
+}
+
+// Category Screen
+class CategoryScreen extends StatefulWidget {
+  final String categoryName;
+
+  const CategoryScreen({Key? key, required this.categoryName}) : super(key: key);
+
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+  int _selectedIndex = 1;
+  final List<ProductItem> _products = List.generate(40, (index) => ProductItem(id: index));
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: Text(
+          widget.categoryName,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.orange.shade400,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Video Upload Section
+              Container(
+                width: screenWidth,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.video_library,
+                      size: 80,
+                      color: Colors.orange,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Upload Video',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? video = await picker.pickVideo(
+                          source: ImageSource.gallery,
+                        );
+                        if (video != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Video selected successfully!')),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.upload),
+                      label: const Text('Choose Video'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange.shade400,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 15,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Product Grid
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 1,
+                ),
+                itemCount: _products.length,
+                itemBuilder: (context, index) {
+                  return _buildProductWidget(_products[index]);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange.shade700,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CategoriesListScreen()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Category',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: '❤️',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductWidget(ProductItem product) {
+    return Container(
+      width: 200,
+      height: 200,
+      margin: const EdgeInsets.all(0),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (product.imagePath != null)
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(product.imagePath!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          else
+            const Icon(
+              Icons.image,
+              size: 60,
+              color: Colors.grey,
+            ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Text Input Button
+              IconButton(
+                onPressed: () {
+                  _showTextInputDialog(product);
+                },
+                icon: const Icon(Icons.edit, size: 20),
+                color: Colors.orange.shade600,
+                tooltip: 'Add Text',
+              ),
+              // Image Upload Button
+              IconButton(
+                onPressed: () async {
+                  final ImagePicker picker = ImagePicker();
+                  final XFile? image = await picker.pickImage(
+                    source: ImageSource.gallery,
+                  );
+                  if (image != null) {
+                    setState(() {
+                      product.imagePath = image.path;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.add_a_photo, size: 20),
+                color: Colors.orange.shade600,
+                tooltip: 'Upload Image',
+              ),
+            ],
+          ),
+          if (product.description != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                product.description!,
+                style: const TextStyle(fontSize: 10),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _showTextInputDialog(ProductItem product) {
+    final TextEditingController controller = TextEditingController(
+      text: product.description ?? '',
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Product Description'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'Enter product details...',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  product.description = controller.text;
+                });
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange.shade400,
+              ),
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// Product Item Model
+class ProductItem {
+  final int id;
+  String? imagePath;
+  String? description;
+
+  ProductItem({required this.id, this.imagePath, this.description});
+}
+
+// Categories List Screen
+class CategoriesListScreen extends StatefulWidget {
+  const CategoriesListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CategoriesListScreen> createState() => _CategoriesListScreenState();
+}
+
+class _CategoriesListScreenState extends State<CategoriesListScreen> {
+  int _selectedIndex = 1;
+
+  final List<String> categories = [
+    'Cosmetics',
+    'Bangles',
+    'Jewellery',
+    'One gram gold',
+    'Chains',
+    'Ear rings',
+    'Hair clips',
+    'Brochures',
+    'Saree pins',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: const Text(
+          'All Categories',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.orange.shade400,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            elevation: 2,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.orange.shade400,
+                child: Text(
+                  categories[index][0],
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              title: Text(
+                categories[index],
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoryScreen(
+                      categoryName: categories[index],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange.shade700,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+            );
+          } else if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Category',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: '❤️',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Favorites Screen
+class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({Key? key}) : super(key: key);
+
+  @override
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
+}
+
+class _FavoritesScreenState extends State<FavoritesScreen> {
+  int _selectedIndex = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: const Text(
+          'Favorites ❤️',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.orange.shade400,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.favorite_border,
+              size: 100,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'No favorites yet!',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Browse our categories to add favorites',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade500,
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange.shade700,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const CategoriesListScreen()),
+            );
+          } else if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Category',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: '❤️',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Settings Screen
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  int _selectedIndex = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: const Text(
+          'Settings',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.orange.shade400,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.store, color: Colors.orange),
+              title: const Text('Shop Information'),
+              subtitle: const Text('View shop details'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                _showShopInfoDialog();
+              },
+            ),
+          ),
+          const SizedBox(height: 10),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.notifications, color: Colors.orange),
+              title: const Text('Notifications'),
+              subtitle: const Text('Manage notifications'),
+              trailing: Switch(
+                value: true,
+                onChanged: (value) {},
+                activeColor: Colors.orange,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.share, color: Colors.orange),
+              title: const Text('Share App'),
+              subtitle: const Text('Share with friends'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Share feature coming soon!')),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 10),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.info, color: Colors.orange),
+              title: const Text('About'),
+              subtitle: const Text('App version 1.0.0'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationName: "Sudha's Mahila Lokh",
+                  applicationVersion: '1.0.0',
+                  applicationIcon: const Icon(Icons.shop, size: 50, color: Colors.orange),
+                  children: [
+                    const Text('Your trusted ladies shop for over 30 years!'),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange.shade700,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const CategoriesListScreen()),
+            );
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Category',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: '❤️',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showShopInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Sudha's Mahila Lokh 🧚‍♀️"),
+          content: const SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'One Stop Ladies shopee',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text('AP biggest Jewellery, Cosmetics, Fancy items, Hair style\'s, Retail shop'),
+                SizedBox(height: 10),
+                Text('30 years of Trust and 1Lack+Designs'),
+                Divider(),
+                Text(
+                  'Address:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('NTR stadium complex, Shop No.11,\nLakshmipuram, AP.'),
+                SizedBox(height: 10),
+                Text(
+                  'Shop Timings:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('10 AM to 9 PM'),
+                SizedBox(height: 10),
+                Text(
+                  'Contact:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('Phone: 0863 2222855'),
+                Text('Phone: 9441412413'),
+                Text('WhatsApp: 9441412413 👍'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
